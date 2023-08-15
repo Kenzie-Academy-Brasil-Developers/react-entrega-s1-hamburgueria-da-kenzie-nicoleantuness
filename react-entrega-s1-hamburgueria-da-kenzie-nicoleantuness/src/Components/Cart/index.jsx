@@ -4,6 +4,8 @@ function Cart({ product, cartProducts, setCartProducts }) {
     
     setCartProducts(updatedCart)
  }
+
+ 
     return(
         <>
         <li key={product.id} className="container-cart">

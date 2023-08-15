@@ -2,7 +2,7 @@
 function Product({ elem, handleClick }) {
 
   return (
-    <li>
+    <li >
       <div className="container-img">
         <img src={elem.img} alt="" />
       </div>
