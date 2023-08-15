@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import ProductList from "./ProductList";
-import Cart from "./Cart";
-import Total from "./Total";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ProductList from "./Components/ProductList";
+import Cart from "./Components/Cart";
+import Total from "./Components/Total";
 
 import "./App.css";
 
@@ -10,6 +12,7 @@ function App() {
   const [filteredProduct, setFilteredProduct] = useState([])
   const [valueInput, setValueInput] = useState("");
   const [cartProducts, setCartProducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     fetch("https://hamburgueria-kenzie-json-serve.herokuapp.com/products")
       .then((response) => response.json())
@@ -19,22 +22,21 @@ function App() {
   
   function filterByName(filter) {
     setFilteredProduct([...products.filter((elem) => elem.name === filter || elem.category === filter)])
-    setProducts(filteredProduct)
+
   }
   
 
-  console.log(filteredProduct)
-
   function handleClick(id) {
-    const product = products.find((elem) => elem.id === id)
-    if(cartProducts.includes(product)) {
-      prompt("Item já adcionado")
-    }else{
-      setCartProducts([...cartProducts, product])
+    const product = products.find((elem) => elem.id === id);
+    if (cartProducts.some((cartProduct) => cartProduct.id === product.id)) {
+      toast.success('Produto adicionado com sucesso!', {
+        onClose: () => setIsModalOpen(true) 
+      });
+    } else {
+      setCartProducts([...cartProducts, product]);
     }
-    
   }
-
+  
   return (
     <div className="App">
       <header>
@@ -56,6 +58,8 @@ function App() {
       </header>
       <div className="container">
       <main>
+      
+      <ToastContainer />
         <ProductList
           products={products}
           cartProducts={cartProducts}
@@ -71,7 +75,7 @@ function App() {
           <h2>Carrinho de compras</h2>
         </div>
         {cartProducts.map((product, index) => (
-          <Cart product={product} cartProducts={cartProducts} />
+          <Cart product={product} cartProducts={cartProducts} setCartProducts={setCartProducts} />
         ))}
         {cartProducts.length === 0 ? (
           <div className="cart-vazio">
