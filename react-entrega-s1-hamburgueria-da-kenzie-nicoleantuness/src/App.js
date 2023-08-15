@@ -21,15 +21,19 @@ function App() {
   }, []);
   
   function filterByName(filter) {
-    setFilteredProduct([...products.filter((elem) => elem.name === filter || elem.category === filter)])
-
+    if (filter.trim() === "") {
+      setFilteredProduct([]);
+    } else {
+      const filtered = products.filter((elem) => elem.name.toLowerCase().includes(filter.toLowerCase()) || elem.category.toLowerCase().includes(filter.toLowerCase()));
+      setFilteredProduct(filtered);
+    }
   }
   
 
   function handleClick(id) {
     const product = products.find((elem) => elem.id === id);
     if (cartProducts.some((cartProduct) => cartProduct.id === product.id)) {
-      toast.success('Produto adicionado com sucesso!', {
+      toast.success('Produto já foi adicionado com sucesso!', {
         onClose: () => setIsModalOpen(true) 
       });
     } else {
